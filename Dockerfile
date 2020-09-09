@@ -2,7 +2,8 @@ FROM php:7.4-alpine
 
 COPY bin/docker-php-ext-get /usr/local/bin/
 
-RUN apk add gmp gmp-dev && \
+RUN chmod +x /usr/local/bin/docker-php-ext-get && \
+  apk add gmp gmp-dev && \
   docker-php-source extract && \
   docker-php-ext-enable opcache && \
   docker-php-ext-get igbinary 3.0.1 && \
