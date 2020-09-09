@@ -15,7 +15,7 @@ jobs:
           #registry=ghcr.io # Will be enabled when GitHub Container Regsitry is released
           echo "::set-output name=registry::$registry"
 
-          base="$registry/mathieu-bour/php-dev"
+          base="$registry/mathieu-bour/php-dev/php-dev"
 
           if [[ $GITHUB_REF == *"tags"* ]]; then
             tag=${GITHUB_REF/refs\/tags\//}
