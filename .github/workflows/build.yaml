@@ -1,3 +1,4 @@
+name: Build Docker Image
 on:
   push:
     branchs: ['main']
@@ -5,6 +6,7 @@ on:
 jobs:
   build:
     name: Build and push Docker image
+    runs-on: ubuntu-latest
     steps:
       - name: Build mappings
         id: mappings
