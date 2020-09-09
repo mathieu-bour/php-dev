@@ -11,7 +11,11 @@ jobs:
       - name: Build mappings
         id: mappings
         run: |
-          base=ghcr.io/mathieu-bour/php-dev
+          registry=docker.pkg.github.com
+          #registry=ghcr.io # Will be enabled when GitHub Container Regsitry is released
+          echo "::set-output name=registry::$registry"
+
+          base="$registry/mathieu-bour/php-dev"
 
           if [[ $GITHUB_REF == *"tags"* ]]; then
             tag=${GITHUB_REF/refs\/tags\//}
@@ -27,4 +31,6 @@ jobs:
       - name: Build Docker image
         run: docker build -t ${{ steps.mappings.outputs.image }} .
       - name: Push Docker image
-        run: docker push ${{ steps.mappings.outputs.image }}
+        run: |
+          echo "${{ secrets.GH_TOKEN }}" | docker login ${{ steps.mappings.outputs.registry }} -u mathieu-bour --password-stdin
+          docker push ${{ steps.mappings.outputs.image }}
