@@ -1,0 +1,28 @@
+on:
+  push:
+    branchs: ['main']
+    tags: ['**']
+jobs:
+  build:
+    name: Build and push Docker image
+    steps:
+      - name: Build mappings
+        id: mappings
+        run: |
+          base=ghcr.io/mathieu-bour/php-dev
+
+          if [[ $GITHUB_REF == *"tags"* ]]; then
+            tag=${GITHUB_REF/refs\/tags\//}
+            image="$base:$tag"
+          else
+            hash=${GITHUB_SHA:0:7}
+            image="$base:$hash"
+          fi
+
+          echo "::set-output name=image::$image"
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build Docker image
+        run: docker build -t ${{ steps.mappings.outputs.image }} .
+      - name: Push Docker image
+        run: docker push ${{ steps.mappings.outputs.image }}
